@@ -1,0 +1,96 @@
+@startuml differencial
+scale 2500*3000
+skinparam backgroundColor #EEEBDC
+skinparam defaultFontName SimHei
+skinparam partitionFontColor midnightblue
+skinparam activity {
+        ArrowColor orangered
+        ArrowFontSize 28
+        BorderColor bisque
+        BackgroundColor ivory
+        FontSize  30
+        DiamondFontSize 30
+        DiamondFontStyle bold
+        DiamondBackgroundColor tomato
+        DiamondFontColor white
+}
+skinparam partition {
+        FontStyle bold
+        FontSize  30
+        BorderColor rosybrown
+        BackgroundColor aliceblue
+}
+skinparam note {
+        BackgroundColor coral
+        FontSize  25
+}
+:<b>Start</b>;
+partition "Parameters Initialize" {
+        :Import numpy、matplotlib、sympy, etc;
+        :Create <latex>\LARGE x, y</latex> symbols;
+        :Set step to <latex>\Large \frac{1}{n}</latex> with <b>n</b>;
+        note right: <latex>\Large n \in \{10,15,20,100\}</latex>
+}
+split
+        -[#green]->
+        partition "Euler Method" {
+                :Create <b>X</b> sequence with parameter <b>n</b>;
+                while (i < n ?) is (True)
+                        -[#chocolate]->
+                        :<latex>\LARGE y_{i+1} = y_i + step \cdot f(y_i)</latex>;
+                        -[#chocolate]->
+                endwhile (False)
+                -[#gray]->
+                :Return <latex>\LARGE x, y</latex>;
+        }
+split again
+        -[#green]->
+        partition "Improved Euler Method" {
+                :Create <b>X</b> sequence with parameter <b>n</b>;
+                while (i < n ?) is (True)
+                        -[#chocolate]->
+                        :<b><latex>\LARGE y_{i+1} = y_i + \frac{step}{2}\cdot\left(f(y_i)+f(y_i+step\cdot{f(y_i)}\right)</latex>;
+                        -[#chocolate]->
+                endwhile (False)
+                -[#gray]->
+                :Return <latex>\LARGE x, y</latex>;
+        }
+split again
+        -[#green]->
+        partition "Implicit Trapezoidal Method" {
+                :Create <b>X</b> sequence with parameter <b>n</b>;
+                while (i < n ?) is (True)
+                        -[#chocolate]->
+                        :<latex>\LARGE y_{i+1} = y_i</latex>;
+                        -[#chocolate]->
+                        :nocoverage = True;
+                        -[#chocolate]->
+                        while (nocoverage ?) is (True)
+                                -[#greenyellow]->
+                                :<latex>\LARGE F_1(y_{i+1})=y_{i+1}-y_i-\frac{step}{2}\cdot (f(y_i)+f(y_{i+1}))</latex>;
+                                -[#greenyellow]->
+                                :<latex>\LARGE F'(y_{i+1})=1-\frac{step}{2}\cdot df\frac{y_{i+1}}{dy}</latex>;
+                                -[#greenyellow]->
+                                :<latex>\LARGE y_{i+1}= y_{i+1}-\frac{F(y_{i+1})}{F'(y_{i+1})}</latex>;
+                                -[#greenyellow]->
+                                :<latex>\LARGE F_2(y_{i+1})=y_{i+1}-y_i-\frac{step}{2}\cdot (f(y_i)+f(y_{i+1}))</latex>;
+                                -[#greenyellow]->
+                                :nocoverage = False if <latex>\LARGE |F_2(y_{i+1})-F_1(y_{i+1})| < \epsilon</latex> else True;
+                                -[#greenyellow]->
+                        endwhile (False)
+                        -[#chocolate]->
+                endwhile (False)
+                -[#gray]->
+                :Return <latex>\LARGE x, y</latex>;
+        }
+end split
+-[#green]->
+partition Draw {
+        :matplotlib preset figure size and axes;
+        :Plot with <b>X</b> and <b>Y</b> sequences;
+        :Set label and title;
+        :Show figure;
+
+}
+:<b>End</b>;
+@enduml
